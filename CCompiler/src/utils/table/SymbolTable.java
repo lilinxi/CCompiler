@@ -138,6 +138,32 @@ public class SymbolTable {
         return buf.toString();
     }
 
+    public void tree() {
+        tree(1);
+    }
+
+    private void tree(int depth) {
+        for (int i = 0; i < depth-1; i++) {
+            System.out.print("    ");
+        }
+        if (depth > 1) {
+            System.out.print("|---");
+        }
+        System.out.println(String.format("%-10s %-5d", symbol, size));
+        for (Entry e : entries) {
+            for (int i = 0; i < depth-1; i++) {
+                System.out.print("    ");
+            }
+            if (depth > 1) {
+                System.out.print("|---");
+            }
+            System.out.println(e);
+            if (e.isSymbolTable()) {
+                e.table.tree(depth+1);
+            }
+        }
+    }
+
     public static void main(String[] args) throws SymbolRedefineException {
         addEntry(new Entry("a", "int"));
         addEntry(new Entry("b", "int"));
@@ -178,6 +204,10 @@ class Entry {
         this.symbol = symbol;
         this.type = type;
         this.length = getTypeLength(type);
+    }
+
+    boolean isSymbolTable() {
+        return type.equalsIgnoreCase(SymbolTableType);
     }
 
     @Override

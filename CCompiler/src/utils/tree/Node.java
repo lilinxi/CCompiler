@@ -55,22 +55,18 @@ public class Node {
     }
 
     public Node setAttribute(String key, Node node) {
-        attributes.put(key, node.getAttribute(key));
-        return this;
+        return setAttribute(key, node.getAttribute(key));
     }
 
     public Node setAttributeOnce(String key, Object value) {
-        if (!attributes.keySet().contains(key)) {
+        if (!attributes.keySet().contains(key)||attributes.get(key)==null) {
             attributes.put(key, value);
         }
         return this;
     }
 
     public Node setAttributeOnce(String key, Node node) {
-        if (!attributes.keySet().contains(key)) {
-            attributes.put(key, node.getAttribute(key));
-        }
-        return this;
+        return setAttributeOnce(key,node.getAttribute(key));
     }
 
     public Object getAttribute(String key)

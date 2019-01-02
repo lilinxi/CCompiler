@@ -7,7 +7,11 @@ bool p;
 bool s=(p||q)&&(p||q);
 p=!q;
 a++;
-if(a>b){
+if(a>b){//should be 16
+    int a;
+    {
+        int b;
+    }
     a=b;
 }else{
     a=c;

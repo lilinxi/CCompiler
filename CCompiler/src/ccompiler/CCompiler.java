@@ -22,7 +22,7 @@ class CCompiler implements CCompilerConstants {
             Node root=evaluate(buf.toString());
             root.dump();
             root.tree();
-            System.out.println(SymbolTable.SymbolStack.peek());
+            SymbolTable.SymbolStack.peek().tree();
             FourTermStyle.show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

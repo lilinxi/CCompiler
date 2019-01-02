@@ -8,6 +8,10 @@ bool s=(p||q)&&(p||q);
 p=!q;
 a++;
 if(a>b){
+    int a;
+    {
+        int b;
+    }
     a=b;
 }else{
     a=c;
