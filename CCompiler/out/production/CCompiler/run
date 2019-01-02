@@ -1,0 +1,2 @@
+cd src/ccompiler
+java -cp /Users/xuanchuanbu/javacc-master/target/javacc.jar javacc ccompiler.jjt

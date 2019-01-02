@@ -1,0 +1,909 @@
+options {
+    STATIC = false; // function should not be static, or it will fault in multithreading
+}
+
+PARSER_BEGIN(CCompiler)
+package ccompiler;
+import java.io.*;
+import utils.tree.*;
+import utils.table.*;
+import utils.exception.*;
+import utils.abstractcode.*;
+
+class CCompiler {
+    public static void main(String[] args) {
+        try {
+            BufferedReader br = new BufferedReader(
+                                new InputStreamReader(
+                                        CCompiler.class.getResourceAsStream("debug.c")));
+            StringBuilder buf = new StringBuilder();
+            String s;
+            while ((s = br.readLine()) != null) {
+                buf.append("\n");
+                buf.append(s);
+            }
+            Node root=evaluate(buf.toString());
+            root.dump();
+            root.tree();
+            System.out.println(SymbolTable.SymbolStack.peek());
+            FourTermStyle.show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ParseException ex) {
+            System.err.println(ex.getMessage());
+        } catch (CompileException ex)  {
+            System.err.println(ex.getMessage());
+        }
+    }
+
+    public static Node evaluate(String src) throws ParseException, CompileException {
+        Reader reader = new StringReader(src);
+        return new CCompiler(reader).compilation_unit();
+    }
+}
+PARSER_END(CCompiler)
+
+/*****************************************************************/
+/*****************************************************************/
+/*****************************************************************/
+SKIP : // Ignoring spaces/tabs/newlines
+{
+        " "
+    |   "\t"
+    |   "\n"
+    |   "\r"
+    |   "\f"
+}
+SPECIAL_TOKEN : // Ignoring line commit
+{
+    < LINE_COMMIT : "//"(~["\n","\r"])* ("\n"|"\r\n"|"\r")? >
+}
+MORE : // Ignoring block commit
+{
+    < "/*" > : IN_BLOCK_COMMIT
+}
+< IN_BLOCK_COMMIT > MORE :
+{
+    < ~[] >
+}
+< IN_BLOCK_COMMIT > SPECIAL_TOKEN :
+{
+    < BLOCK_COMMIT : "*/" > : DEFAULT
+}
+TOKEN : // Keywords and punctuation
+{
+        < SEMIC : ";" >
+    |   < COMMA : "," >
+    |   < ASSIGN : "=" >
+    |   < MACRO : "#" >
+
+    |   < LBR : "(" >
+    |   < RBR : ")" >
+    |   < RCBR : "}" >
+    |   < LCBR : "{" >
+
+    |   < PLUS : "+" >
+    |   < MINUS : "-" >
+    |   < MULT : "*" >
+    |   < DIV : "/" >
+    |   < MOD : "%" >
+    |   < INC : "++" >
+    |   < DEC : "--" >
+
+    |   < EXLM : "!" >
+    |   < LOGIC_EQUAL : "==" >
+    |   < LOGIC_NOT : "!=" >
+    |   < LOGIC_AND : "&&" >
+    |   < LOGIC_OR : "||" >
+    |   < LEFT : "<" >
+    |   < RIGHT : ">" >
+    |   < LEFT_EQUAL : "<=" >
+    |   < RIGHT_EQUAL : ">=" >
+
+    |   < BOOL : "bool" >
+    |   < DO : "do" >
+    |   < ELSE : "else" >
+    |   < IF : "if" >
+    |   < INT : "int" >
+    |   < FLOAT : "float" >
+    |   < DOUBLE : "double" >
+    |   < RETURN : "return" >
+    |   < STRING : "string" >
+    |   < VOID : "void" >
+    |   < CHAR : "char" >
+    |   < WHILE : "while" >
+    |   < INCLUDE : "include" >
+    |   < DEFINE : "define" >
+    |   < GOTO : "goto" >
+    |   < FOR : "for" >
+    |   < SWITCH : "switch" >
+    |   < CASE : "case" >
+    |   < CASE_DEFAULT : "default" >
+    |   < BREAK : "break" >
+    |   < CONTINUE : "continue" >
+}
+TOKEN :
+{
+    < IDENTIFIER : ["a"-"z", "A"-"Z", "_"] (["a"-"z", "A"-"Z", "_", "0"-"9"])* >
+}
+TOKEN :
+{
+    < INT_VALUE : ["1"-"9"] (["0"-"9"])*
+            |   "0" ["x", "X"] (["0"-"9", "a"-"f", "A"-"F"])+
+            |   "0" (["0"-"7"])*
+            >
+}
+TOKEN :
+{
+    < FLOAT_VALUE : ["1"-"9"] (["0"-"9"])*("."(["0"-"9"])*)?("F"|"f") >
+}
+TOKEN :
+{
+    < DOUBLE_VALUE : ["1"-"9"] (["0"-"9"])*("."(["0"-"9"])*)? >
+}
+TOKEN :
+{
+    < BOOL_VALUE : "true"|"false" >
+}
+MORE : // Strings
+{
+    < "\"" > : IN_STRING
+}
+< IN_STRING > MORE :
+{
+        < (~["\"", "\\", "\n", "\r"])+ >
+    |   < "\\"(["0"-"7"]){3} >
+    |   < "\\"~[] >
+}
+< IN_STRING > TOKEN :
+{
+    < STRING_VALUE : "\"" > : DEFAULT
+}
+MORE : // CHARACTER
+{
+    < "'" > : IN_CHARACTER
+}
+< IN_CHARACTER > MORE :
+{
+        < ~["'", "\\", "\n", "\r"] >    : CHARACTER_TERM
+    |   < "\\"(["0"-"7"]){3} >          : CHARACTER_TERM
+    |   < "\\"~[] >                     : CHARACTER_TERM
+}
+< CHARACTER_TERM > TOKEN :
+{
+    < CHAR_VALUE : "'" > : DEFAULT
+}
+TOKEN : // Anything not recognised so far
+{
+    < OTHER : ~[] >
+}
+
+/*****************************************************************/
+/*****************************************************************/
+/*****************************************************************/
+Node compilation_unit() throws CompileException :
+{
+    utils.tree.Node root;
+    Node node;
+}
+{
+    node=stmts() < EOF >
+    {
+        root=new Node("root").addChildren(node);
+        return root;
+    }
+}
+Node stmts() throws CompileException :
+{
+    Node node=new Node("stmts");
+    Node tmp;
+}
+{
+    (
+    tmp=stmt()
+    {
+        node.setAttributeOnce(Node.StyleId,tmp);
+        node.addChildren(tmp);
+    }
+    )*
+    {
+        return node.simplify();
+    }
+}
+Node stmt() throws CompileException :
+{
+    Node node=null;
+}
+{
+    (   < SEMIC >
+    |   LOOKAHEAD(2) node=expr() < SEMIC >
+    |   node=block()
+    |   node=def_stmt()
+    |   LOOKAHEAD(2) node=assigns_stmt()
+    |   node=if_stmt()
+    |   node=while_stmt()
+    |   node=dowhile_stmt()
+    )
+    {
+        if(node!=null){
+            return node;
+        }else{
+            return new Node("ndef stmt");
+        }
+    }
+}
+Node block() throws CompileException :
+{
+    Node node;
+}
+{
+    < LCBR >
+    {
+        SymbolTable.pushSymbolTable("block");
+    }
+    node=stmts()
+    < RCBR >
+    {
+        SymbolTable.popSymbolTable();
+        return node;
+    }
+}
+Node def_stmt() throws CompileException :
+{
+    Node node;
+}
+{
+    node=def_vars()
+    {
+        return node;
+    }
+}
+Node type() throws CompileException :
+{
+    Node node;
+}
+{
+    node=typedef_base()
+    {
+        return node;
+    }
+}
+Node typedef_base() throws CompileException :
+{
+    Token x;
+}
+{
+    (   x=< VOID >
+    |   x=< CHAR >
+    |   x=< INT >
+    |   x=< FLOAT >
+    |   x=< DOUBLE >
+    |   x=< BOOL >
+    |   x=< STRING >
+    )
+    {
+        return new Node("type").setAttribute(Node.Type,x.image);
+    }
+}
+Node name() throws CompileException :
+{
+    Token id;
+}
+{
+    id=< IDENTIFIER >
+    {
+        return new Node(Node.Symbol)
+            .setAttribute(Node.Value,id.image);
+    }
+}
+Node def_vars() throws CompileException :
+{
+    Node node=new Node("defVars");
+    Node t,id,val;
+    Node temp;
+}
+{
+    t=type() id=name()
+    {
+        temp=new Node("defVar").addChildren(t,id);
+        SymbolTable.addEntry((String)id.getAttribute(Node.Value),(String)t.getAttribute(Node.Type));
+        node.addChildren(temp);
+    }
+    [
+        < ASSIGN > val=expr()
+        {
+            id=SymbolTable.getNode_r(id);
+            id.typeMatch(val);
+            temp.addChildren(val);
+
+            FourTermStyle style=FourTermStyle.addCurrent(
+                        FourTermStyle.ASSIGN,
+                        val.getAttribute(Node.Value),
+                        id.getAttribute(Node.Value));
+            node.setAttribute(Node.StyleId,style.getId());
+            // 多个赋值语句只赋予第一个的 ID
+        }
+    ]
+    (
+        < COMMA > id=name()
+        {
+            temp=new Node("defVar").addChildren(t,id);
+            SymbolTable.addEntry((String)id.getAttribute(Node.Value),(String)t.getAttribute(Node.Type));
+            node.addChildren(temp);
+        }
+        [
+             < ASSIGN > val=expr()
+             {
+                id=SymbolTable.getNode_r(id);
+                id.typeMatch(val);
+                temp.addChildren(val);
+
+                FourTermStyle.addCurrent(
+                        FourTermStyle.ASSIGN,
+                        val.getAttribute(Node.Value),
+                        id.getAttribute(Node.Value));
+             }
+        ]
+    )* < SEMIC >
+    {
+        return node.simplify();
+    }
+}
+// TODO may not used
+Node number() throws CompileException :
+{
+    Node node=new Node("terminal");
+    Token x;
+}
+{
+    (   x=< INT_VALUE >
+        {
+            node.setAttribute(Node.Type,"int");
+        }
+    |   x=< FLOAT_VALUE >
+        {
+            node.setAttribute(Node.Type,"float");
+        }
+    |   x=< DOUBLE_VALUE >
+        {
+            node.setAttribute(Node.Type,"double");
+        }
+    )
+    {
+        return node.setAttribute(Node.Value,x.image);
+    }
+}
+Node terminal() throws CompileException :
+{
+    Node node=new Node("terminal");
+    Token x;
+}
+{
+    (   x=< INT_VALUE >
+        {
+            node.setAttribute(Node.Type,"int");
+        }
+    |   x=< FLOAT_VALUE >
+        {
+            node.setAttribute(Node.Type,"float");
+        }
+    |   x=< DOUBLE_VALUE >
+        {
+            node.setAttribute(Node.Type,"double");
+        }
+    |   x=< BOOL_VALUE >
+        {
+            node.setAttribute(Node.Type,"bool");
+        }
+    |   x=< CHAR_VALUE >
+        {
+            node.setAttribute(Node.Type,"char");
+        }
+    |   x=< STRING_VALUE >
+        {
+            node.setAttribute(Node.Type,"string");
+        }
+    )
+    {
+        return node.setAttribute(Node.Value,Node.TerminalValue+x.image);
+    }
+}
+Node assigns_stmt() throws CompileException : // 赋值语句
+{
+    Node node=new Node("assigns");
+    Node id;
+    Node val;
+}
+{
+    id=name() < ASSIGN > val=expr()
+    {
+        id=SymbolTable.getNode_r(id);
+        id.typeMatch(val);
+        node.addChildren(new Node("assign").addChildren(id,val));
+
+        FourTermStyle style=FourTermStyle.addCurrent(
+                    FourTermStyle.ASSIGN,
+                    val.getAttribute(Node.Value),
+                    id.getAttribute(Node.Value));
+        node.setAttribute(Node.StyleId,style.getId());
+    }
+    (
+        < COMMA > id=name() < ASSIGN > val=expr()
+        {
+           id=SymbolTable.getNode_r(id);
+           id.typeMatch(val);
+           node.addChildren(new Node("assign").addChildren(id,val));
+
+            FourTermStyle.addCurrent(
+                    FourTermStyle.ASSIGN,
+                    val.getAttribute(Node.Value),
+                    id.getAttribute(Node.Value));
+        }
+
+    )* < SEMIC >
+    {
+        return node.simplify();
+    }
+}
+Node expr() throws CompileException : // ||
+{
+    Node lnode,rnode;
+    Node op_node=null;
+    Token op;
+}
+{
+    lnode=expr1()
+    (
+        op=< LOGIC_OR >
+        {
+            lnode=SymbolTable.getNode_r(lnode);
+            lnode.typeMatch("bool");
+            if(op_node==null){
+                op_node=new Node(op.image)
+                .setAttribute(Node.Type,"bool")
+                .addChildren(lnode);
+            }else{
+                op_node=new Node(op.image)
+                .setAttribute(Node.Type,"bool")
+                .addChildren(op_node);
+            }
+        }
+        rnode=expr1()
+        {
+            rnode=SymbolTable.getNode_r(rnode);
+            rnode.typeMatch(lnode);
+            op_node.addChildren(rnode);
+
+            String temp=FourTermStyle.newTemp();
+            FourTermStyle style=FourTermStyle.addCurrent(
+                    op.image,
+                    lnode.getAttribute(Node.Value),
+                    rnode.getAttribute(Node.Value),
+                    temp);
+            op_node.setAttribute(Node.Value,temp);
+            op_node.setAttribute(Node.StyleId,style.getId());
+
+            lnode=op_node;
+        }
+    )*
+    {
+        if(op_node==null){
+            return lnode;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr1() throws CompileException : // &&
+{
+    Node lnode,rnode;
+    Node op_node=null;
+    Token op;
+}
+{
+    lnode=expr2()
+    (
+        op=< LOGIC_AND >
+        {
+            lnode=SymbolTable.getNode_r(lnode);
+            lnode.typeMatch("bool");
+            if(op_node==null){
+                 op_node=new Node(op.image)
+                 .setAttribute(Node.Type,"bool")
+                 .addChildren(lnode);
+            }else{
+                 op_node=new Node(op.image)
+                 .setAttribute(Node.Type,"bool")
+                 .addChildren(op_node);
+            }
+        }
+        rnode=expr2()
+        {
+            rnode=SymbolTable.getNode_r(rnode);
+            rnode.typeMatch(lnode);
+            op_node.addChildren(rnode);
+
+            String temp=FourTermStyle.newTemp();
+            FourTermStyle style=FourTermStyle.addCurrent(
+                    op.image,
+                    lnode.getAttribute(Node.Value),
+                    rnode.getAttribute(Node.Value),
+                    temp);
+            op_node.setAttribute(Node.Value,temp);
+            op_node.setAttribute(Node.StyleId,style.getId());
+
+            lnode=op_node;
+        }
+    )*
+    {
+        if(op_node==null){
+            return lnode;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr2() throws CompileException : // >, <, >=, <=, ==, !=
+{
+    Node lnode,rnode;
+    Node op_node=null;
+    Token op;
+}
+{
+    lnode=expr3()
+    [
+        (
+            op=< RIGHT >
+        |   op=< LEFT >
+        |   op=< RIGHT_EQUAL >
+        |   op=< LEFT_EQUAL >
+        |   op=< LOGIC_EQUAL >
+        |   op=< LOGIC_NOT >
+        )
+        {
+            if(op_node==null){
+                 op_node=new Node(op.image)
+                 .setAttribute(Node.Type,"bool")
+                 .addChildren(lnode);
+            }else{
+                 op_node=new Node(op.image)
+                 .setAttribute(Node.Type,"bool")
+                 .addChildren(op_node);
+            }
+        }
+        rnode=expr3()
+        {
+            lnode=SymbolTable.getNode_r(lnode);
+            rnode=SymbolTable.getNode_r(rnode);
+            lnode.typeMatch(rnode);
+            op_node.addChildren(rnode);
+
+            String temp=FourTermStyle.newTemp();
+            FourTermStyle style=FourTermStyle.addCurrent(
+                    op.image,
+                    lnode.getAttribute(Node.Value),
+                    rnode.getAttribute(Node.Value),
+                    temp);
+            op_node.setAttribute(Node.Value,temp);
+            op_node.setAttribute(Node.StyleId,style.getId());
+        }
+    ]
+    {
+        if(op_node==null){
+            return lnode;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr3() throws CompileException : // +, -
+{
+    Node lnode,rnode;
+    Node op_node=null;
+    Token op;
+}
+{
+    lnode=expr4()
+    (
+        (
+            op=< PLUS >
+        |   op=< MINUS >
+        )
+        {
+            lnode=SymbolTable.getNode_r(lnode);
+            lnode.typeMatch(Node.NumberType);
+            if(op_node==null){
+                 op_node=new Node(op.image)
+                 .setAttribute(Node.Type,lnode)
+                 .addChildren(lnode);
+            }else{
+                 op_node=new Node(op.image)
+                 .setAttribute(Node.Type,lnode)
+                 .addChildren(op_node);
+            }
+        }
+        rnode=expr4()
+        {
+            rnode=SymbolTable.getNode_r(rnode);
+            lnode.typeMatch(rnode);
+            op_node.addChildren(rnode);
+
+            String temp=FourTermStyle.newTemp();
+            FourTermStyle style=FourTermStyle.addCurrent(
+                    op.image,
+                    lnode.getAttribute(Node.Value),
+                    rnode.getAttribute(Node.Value),
+                    temp);
+            op_node.setAttribute(Node.Value,temp);
+            op_node.setAttribute(Node.StyleId,style.getId());
+
+            lnode=op_node;
+        }
+    )*
+    {
+        if(op_node==null){
+            return lnode;
+        }else{
+            return op_node;
+        }
+    }
+}
+Node expr4() throws CompileException : // *, /, %
+{
+    Node lnode,rnode;
+    Node op_node=null;
+    Token op=null;
+}
+{
+    lnode=pre_op_const()
+    (
+        (
+            op=< MULT >
+        |   op=< DIV >
+        |   op=< MOD >
+        )
+        {
+            lnode=SymbolTable.getNode_r(lnode);
+            lnode.typeMatch(Node.NumberType);
+            if(op_node==null){
+                 op_node=new Node(op.image)
+                 .setAttribute(Node.Type,lnode)
+                 .addChildren(lnode);
+            }else{
+                 op_node=new Node(op.image)
+                 .setAttribute(Node.Type,lnode)
+                 .addChildren(op_node);
+            }
+        }
+        rnode=pre_op_const()
+        {
+            rnode=SymbolTable.getNode_r(rnode);
+            lnode.typeMatch(rnode);
+            op_node.addChildren(rnode);
+
+            String temp=FourTermStyle.newTemp();
+            FourTermStyle style=FourTermStyle.addCurrent(
+                    op.image,
+                    lnode.getAttribute(Node.Value),
+                    rnode.getAttribute(Node.Value),
+                    temp);
+            op_node.setAttribute(Node.Value,temp);
+            op_node.setAttribute(Node.StyleId,style.getId());
+
+            lnode=op_node;
+        }
+    )*
+    {
+        if(op_node==null){
+           return lnode;
+        }else{
+           return op_node;
+        }
+    }
+}
+Node pre_op_const() throws CompileException : // 前置运算符：-，+，！
+{
+    Node node;
+    Token op=null;
+}
+{
+    (   op=< PLUS > node=term()
+        {
+            node=SymbolTable.getNode_r(node);
+            node.typeMatch(Node.NumberType);
+        }
+    |   op=< MINUS > node=term()
+        {
+            node=SymbolTable.getNode_r(node);
+            node.typeMatch(Node.NumberType);
+        }
+    |   op=< EXLM > node=term()
+        {
+            node=SymbolTable.getNode_r(node);
+            node.typeMatch("bool");
+        }
+    |   node=pre_op()
+        {
+            return node;
+        }
+    )
+    {
+        String temp=FourTermStyle.newTemp();
+        FourTermStyle style=FourTermStyle.addCurrent(
+                op.image,
+                node.getAttribute(Node.Value),
+                temp);
+        return new Node(op.image)
+        .addChildren(node)
+        .setAttribute(Node.Type,node)
+        .setAttribute(Node.Value,temp)
+        .setAttribute(Node.StyleId,style.getId());
+    }
+}
+Node pre_op() throws CompileException : // 前置运算符：--，++
+{
+    Node node;
+    Token op=null;
+}
+{
+    (   op=< INC > node=name()
+        {
+            node=SymbolTable.getNode_r(node);
+            node.typeMatch("int");
+        }
+    |   op=< DEC > node=name()
+        {
+            node=SymbolTable.getNode_r(node);
+            node.typeMatch("int");
+        }
+    |   node=post_op()
+        {
+            return node;
+        }
+    )
+    {
+        FourTermStyle style=FourTermStyle.addCurrent(
+                op.image,
+                node.getAttribute(Node.Value));
+        // 前置运算符返回的是改变之后的值
+        return new Node(op.image)
+        .addChildren(node)
+        .setAttribute(Node.Type,node)
+        .setAttribute(Node.Value,node)
+        .setAttribute(Node.StyleId,style.getId());
+    }
+}
+Node post_op() throws CompileException : // 后置运算符：++，--
+{
+    Node node;
+    Token op=null;
+}
+{
+        LOOKAHEAD(name() (< INC >|< DEC >))
+        node=name() (op=< INC >|op=< DEC >)
+        {
+            node=SymbolTable.getNode_r(node);
+            node.typeMatch("int");
+            // TODO 后置运算返回的还是改变之后的值
+            FourTermStyle style=FourTermStyle.addCurrent(
+                op.image,
+                node.getAttribute(Node.Value));
+            return new Node("postOp")
+            .addChildren(node,new Node(op.image))
+            .setAttribute(Node.Type,node)
+            .setAttribute(Node.Value,node)
+            .setAttribute(Node.StyleId,style.getId());
+        }
+    |   node=term()
+        {
+            return node;
+        }
+}
+Node term() throws CompileException :// 强制类型转换，括号，终结符
+{
+    Node node;
+    Node temp;
+}
+{
+    (   LOOKAHEAD(< LBR > type())
+        < LBR > temp=type()
+        {
+            node=new Node("cast");
+            node.setAttribute(Node.Type,temp);
+            node.addChildren(temp);
+        }
+        < RBR > temp=term()
+        {
+            node.addChildren(temp);
+        }
+    |   < LBR > node=expr() < RBR >
+    |   node=terminal()
+    |   node=name()
+    )
+    {
+        return SymbolTable.getNode_r(node);
+    }
+}
+Node if_stmt() throws CompileException :
+{
+    Node cond;
+    Node if_node;
+    Node else_node=null;
+    FourTermStyle if_style;
+    FourTermStyle else_style;
+}
+{
+    < IF > "(" cond=expr() ")"
+    {
+        cond.typeMatch("bool");
+        if_style=FourTermStyle.addCurrentJmp(
+        cond.getAttribute(Node.Value)
+        );
+        else_style=FourTermStyle.addCurrentJmp();
+    }
+    (   LOOKAHEAD(< LCBR >) if_node=block()
+    |   if_node=stmt()
+    )
+    {
+        if_style.backpatchResult(if_node.getAttribute(Node.StyleId));
+    }
+    [LOOKAHEAD(1) < ELSE >
+        (   LOOKAHEAD(< LCBR >) else_node=block()
+        |   else_node=stmt()
+        )
+        {
+            else_style.backpatchResult(else_node.getAttribute(Node.StyleId));
+        }
+    ]
+    {
+//        only first effective backpatch make sense, following is empty if,else case
+        if_style.backpatchResult(FourTermStyle.nextId());
+        else_style.backpatchResult(FourTermStyle.nextId());
+        return new Node("if").addChildren(cond,if_node,else_node);
+    }
+}
+Node while_stmt() throws CompileException :
+{
+    Node cond;
+    Node while_node;
+    FourTermStyle in_style;
+    FourTermStyle out_style;
+}
+{
+    < WHILE > < LBR > cond=expr() < RBR >
+    {
+        cond.typeMatch("bool");
+        in_style=FourTermStyle.addCurrentJmp(
+        cond.getAttribute(Node.Value)
+        );
+        out_style=FourTermStyle.addCurrentJmp();
+    }
+    ( LOOKAHEAD(< LCBR >) while_node=block()|while_node=stmt())
+    {
+        in_style.backpatchResult(while_node.getAttribute(Node.StyleId));
+        FourTermStyle while_style=FourTermStyle.addCurrentJmp();
+        while_style.backpatchResult(in_style.getId());
+//        only first effective backpatch make sense, following is empty while case
+        in_style.backpatchResult(while_style.getId());
+        out_style.backpatchResult(FourTermStyle.nextId());
+        return new Node("while").addChildren(cond,while_node);
+    }
+}
+Node dowhile_stmt() throws CompileException :
+{
+    Node cond;
+    Node dowhile_node;
+}
+{
+    < DO > (LOOKAHEAD(< LCBR >) dowhile_node=block()|dowhile_node=stmt()) < WHILE > < LBR > cond=expr() < RBR> < SEMIC >
+    {
+        cond.typeMatch("bool");
+        FourTermStyle.addCurrentJmp(
+                cond.getAttribute(Node.Value)
+                )
+                .backpatchResult(dowhile_node.getAttribute(Node.StyleId));
+        return new Node("dowhile").addChildren(dowhile_node,cond);
+    }
+}
