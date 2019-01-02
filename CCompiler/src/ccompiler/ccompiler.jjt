@@ -77,7 +77,6 @@ TOKEN : // Keywords and punctuation
         < SEMIC : ";" >
     |   < COMMA : "," >
     |   < ASSIGN : "=" >
-    |   < MACRO : "#" >
 
     |   < LBR : "(" >
     |   < RBR : ")" >
@@ -114,15 +113,6 @@ TOKEN : // Keywords and punctuation
     |   < VOID : "void" >
     |   < CHAR : "char" >
     |   < WHILE : "while" >
-    |   < INCLUDE : "include" >
-    |   < DEFINE : "define" >
-    |   < GOTO : "goto" >
-    |   < FOR : "for" >
-    |   < SWITCH : "switch" >
-    |   < CASE : "case" >
-    |   < CASE_DEFAULT : "default" >
-    |   < BREAK : "break" >
-    |   < CONTINUE : "continue" >
 }
 TOKEN :
 {
@@ -189,7 +179,8 @@ Node compilation_unit() throws CompileException :
     Node node;
 }
 {
-    node=stmts() < EOF >
+    node=stmts()
+    < EOF >
     {
         root=new Node("root").addChildren(node);
         return root;
@@ -225,6 +216,7 @@ Node stmt() throws CompileException :
     |   node=if_stmt()
     |   node=while_stmt()
     |   node=dowhile_stmt()
+    |   node=return_stmt()
     )
     {
         if(node!=null){
@@ -255,7 +247,51 @@ Node def_stmt() throws CompileException :
     Node node;
 }
 {
-    node=def_vars()
+    (   LOOKAHEAD (type() name() "(")
+        node=def_fun()
+    |   node=def_vars()
+    )
+    {
+        return node;
+    }
+}
+// only for main
+Node def_fun() throws CompileException :
+{
+    Node node;
+    Node t,id,b;
+}
+{
+    t=type() id=name() < LBR > < RBR >
+    {
+        node=new Node("defFun").addChildren(t,id);
+    }
+    (
+            < SEMIC >
+        |   b=block()
+            {
+               node.addChildren(b);
+            }
+    )
+    {
+        return node;
+    }
+}
+// only for main
+Node return_stmt() throws CompileException :
+{
+    Node node=new Node("return");
+    Node val;
+}
+{
+    < RETURN >
+    [
+        val=expr()
+        {
+            node.addChildren(val);
+        }
+    ]
+    < SEMIC >
     {
         return node;
     }

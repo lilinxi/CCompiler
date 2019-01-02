@@ -1,3 +1,4 @@
+int main(){
 int a;
 int b;
 int c=1;
@@ -27,3 +28,4 @@ if(a!=b)
 do
     a=1;
 while(a>b);
+return 0;}

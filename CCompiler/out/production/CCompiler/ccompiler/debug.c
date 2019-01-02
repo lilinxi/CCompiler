@@ -1,3 +1,4 @@
+int main(){
 int a;
 int b;
 int c=1;
@@ -7,7 +8,7 @@ bool p;
 bool s=(p||q)&&(p||q);
 p=!q;
 a++;
-if(a>b){//should be 16
+if(a>b){
     int a;
     {
         int b;
@@ -27,3 +28,4 @@ if(a!=b)
 do
     a=1;
 while(a>b);
+return 0;}

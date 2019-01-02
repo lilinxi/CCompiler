@@ -21,105 +21,85 @@ public interface CCompilerConstants {
   /** RegularExpression Id. */
   int ASSIGN = 12;
   /** RegularExpression Id. */
-  int MACRO = 13;
+  int LBR = 13;
   /** RegularExpression Id. */
-  int LBR = 14;
+  int RBR = 14;
   /** RegularExpression Id. */
-  int RBR = 15;
+  int RCBR = 15;
   /** RegularExpression Id. */
-  int RCBR = 16;
+  int LCBR = 16;
   /** RegularExpression Id. */
-  int LCBR = 17;
+  int PLUS = 17;
   /** RegularExpression Id. */
-  int PLUS = 18;
+  int MINUS = 18;
   /** RegularExpression Id. */
-  int MINUS = 19;
+  int MULT = 19;
   /** RegularExpression Id. */
-  int MULT = 20;
+  int DIV = 20;
   /** RegularExpression Id. */
-  int DIV = 21;
+  int MOD = 21;
   /** RegularExpression Id. */
-  int MOD = 22;
+  int INC = 22;
   /** RegularExpression Id. */
-  int INC = 23;
+  int DEC = 23;
   /** RegularExpression Id. */
-  int DEC = 24;
+  int EXLM = 24;
   /** RegularExpression Id. */
-  int EXLM = 25;
+  int LOGIC_EQUAL = 25;
   /** RegularExpression Id. */
-  int LOGIC_EQUAL = 26;
+  int LOGIC_NOT = 26;
   /** RegularExpression Id. */
-  int LOGIC_NOT = 27;
+  int LOGIC_AND = 27;
   /** RegularExpression Id. */
-  int LOGIC_AND = 28;
+  int LOGIC_OR = 28;
   /** RegularExpression Id. */
-  int LOGIC_OR = 29;
+  int LEFT = 29;
   /** RegularExpression Id. */
-  int LEFT = 30;
+  int RIGHT = 30;
   /** RegularExpression Id. */
-  int RIGHT = 31;
+  int LEFT_EQUAL = 31;
   /** RegularExpression Id. */
-  int LEFT_EQUAL = 32;
+  int RIGHT_EQUAL = 32;
   /** RegularExpression Id. */
-  int RIGHT_EQUAL = 33;
+  int BOOL = 33;
   /** RegularExpression Id. */
-  int BOOL = 34;
+  int DO = 34;
   /** RegularExpression Id. */
-  int DO = 35;
+  int ELSE = 35;
   /** RegularExpression Id. */
-  int ELSE = 36;
+  int IF = 36;
   /** RegularExpression Id. */
-  int IF = 37;
+  int INT = 37;
   /** RegularExpression Id. */
-  int INT = 38;
+  int FLOAT = 38;
   /** RegularExpression Id. */
-  int FLOAT = 39;
+  int DOUBLE = 39;
   /** RegularExpression Id. */
-  int DOUBLE = 40;
+  int RETURN = 40;
   /** RegularExpression Id. */
-  int RETURN = 41;
+  int STRING = 41;
   /** RegularExpression Id. */
-  int STRING = 42;
+  int VOID = 42;
   /** RegularExpression Id. */
-  int VOID = 43;
+  int CHAR = 43;
   /** RegularExpression Id. */
-  int CHAR = 44;
+  int WHILE = 44;
   /** RegularExpression Id. */
-  int WHILE = 45;
+  int IDENTIFIER = 45;
   /** RegularExpression Id. */
-  int INCLUDE = 46;
+  int INT_VALUE = 46;
   /** RegularExpression Id. */
-  int DEFINE = 47;
+  int FLOAT_VALUE = 47;
   /** RegularExpression Id. */
-  int GOTO = 48;
+  int DOUBLE_VALUE = 48;
   /** RegularExpression Id. */
-  int FOR = 49;
+  int BOOL_VALUE = 49;
   /** RegularExpression Id. */
-  int SWITCH = 50;
+  int STRING_VALUE = 54;
   /** RegularExpression Id. */
-  int CASE = 51;
+  int CHAR_VALUE = 59;
   /** RegularExpression Id. */
-  int CASE_DEFAULT = 52;
-  /** RegularExpression Id. */
-  int BREAK = 53;
-  /** RegularExpression Id. */
-  int CONTINUE = 54;
-  /** RegularExpression Id. */
-  int IDENTIFIER = 55;
-  /** RegularExpression Id. */
-  int INT_VALUE = 56;
-  /** RegularExpression Id. */
-  int FLOAT_VALUE = 57;
-  /** RegularExpression Id. */
-  int DOUBLE_VALUE = 58;
-  /** RegularExpression Id. */
-  int BOOL_VALUE = 59;
-  /** RegularExpression Id. */
-  int STRING_VALUE = 64;
-  /** RegularExpression Id. */
-  int CHAR_VALUE = 69;
-  /** RegularExpression Id. */
-  int OTHER = 70;
+  int OTHER = 60;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -147,7 +127,6 @@ public interface CCompilerConstants {
     "\";\"",
     "\",\"",
     "\"=\"",
-    "\"#\"",
     "\"(\"",
     "\")\"",
     "\"}\"",
@@ -180,29 +159,20 @@ public interface CCompilerConstants {
     "\"void\"",
     "\"char\"",
     "\"while\"",
-    "\"include\"",
-    "\"define\"",
-    "\"goto\"",
-    "\"for\"",
-    "\"switch\"",
-    "\"case\"",
-    "\"default\"",
-    "\"break\"",
-    "\"continue\"",
     "<IDENTIFIER>",
     "<INT_VALUE>",
     "<FLOAT_VALUE>",
     "<DOUBLE_VALUE>",
     "<BOOL_VALUE>",
     "\"\\\"\"",
-    "<token of kind 61>",
-    "<token of kind 62>",
-    "<token of kind 63>",
+    "<token of kind 51>",
+    "<token of kind 52>",
+    "<token of kind 53>",
     "\"\\\"\"",
     "\"\\\'\"",
-    "<token of kind 66>",
-    "<token of kind 67>",
-    "<token of kind 68>",
+    "<token of kind 56>",
+    "<token of kind 57>",
+    "<token of kind 58>",
     "\"\\\'\"",
     "<OTHER>",
   };
