@@ -3,13 +3,10 @@ package utils.abstractcode;
 import java.util.ArrayList;
 
 public class FourTermStyle {
-    public static final String BLANK = "0";
-    public static final String ASSIGN = "=";
+    public static final String BLANK = "_";
+    public static final String ASSIGN = ":=";
     public static final String JMP = "j";
-    private static final String TEMP = "t";
-    private static final String RETURN= "RETURN";
-    private static final String FUNC= "fun";
-    private static final String MAIN= "main";
+    private static final String TEMP = ".t";
     private static int TEMP_COUNT = 1;
     private static final ArrayList<FourTermStyle> BUFFER = new ArrayList<>();
     private static final ArrayList<FourTermStyle> CURRENT = new ArrayList<>();
@@ -61,6 +58,12 @@ public class FourTermStyle {
         }
     }
 
+    public void backpatchArg1(Object arg1) {
+        if (this.arg1.equals(BLANK)&&arg1!=null) {
+            this.arg1 = arg1;
+        }
+    }
+
     public static int nextId() {
         return CURRENT.size();
     }
@@ -81,16 +84,6 @@ public class FourTermStyle {
         for (FourTermStyle style : CURRENT) {
             System.out.println(style);
         }
-    }
-
-    public static final void start() {
-        FourTermStyle.addCurrent(FUNC, BLANK, BLANK, MAIN);
-    }
-
-    public static final void finish() {
-        String temp = newTemp();
-        FourTermStyle.addCurrent(ASSIGN, "#0", BLANK, temp);
-        FourTermStyle.addCurrent(RETURN, BLANK, BLANK, temp);
     }
 
     @Override

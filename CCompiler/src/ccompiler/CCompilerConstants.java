@@ -85,21 +85,23 @@ public interface CCompilerConstants {
   /** RegularExpression Id. */
   int WHILE = 44;
   /** RegularExpression Id. */
-  int IDENTIFIER = 45;
+  int FOR = 45;
   /** RegularExpression Id. */
-  int INT_VALUE = 46;
+  int IDENTIFIER = 46;
   /** RegularExpression Id. */
-  int FLOAT_VALUE = 47;
+  int INT_VALUE = 47;
   /** RegularExpression Id. */
-  int DOUBLE_VALUE = 48;
+  int FLOAT_VALUE = 48;
   /** RegularExpression Id. */
-  int BOOL_VALUE = 49;
+  int DOUBLE_VALUE = 49;
   /** RegularExpression Id. */
-  int STRING_VALUE = 54;
+  int BOOL_VALUE = 50;
   /** RegularExpression Id. */
-  int CHAR_VALUE = 59;
+  int STRING_VALUE = 55;
   /** RegularExpression Id. */
-  int OTHER = 60;
+  int CHAR_VALUE = 60;
+  /** RegularExpression Id. */
+  int OTHER = 61;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -159,20 +161,21 @@ public interface CCompilerConstants {
     "\"void\"",
     "\"char\"",
     "\"while\"",
+    "\"for\"",
     "<IDENTIFIER>",
     "<INT_VALUE>",
     "<FLOAT_VALUE>",
     "<DOUBLE_VALUE>",
     "<BOOL_VALUE>",
     "\"\\\"\"",
-    "<token of kind 51>",
     "<token of kind 52>",
     "<token of kind 53>",
+    "<token of kind 54>",
     "\"\\\"\"",
     "\"\\\'\"",
-    "<token of kind 56>",
     "<token of kind 57>",
     "<token of kind 58>",
+    "<token of kind 59>",
     "\"\\\'\"",
     "<OTHER>",
   };

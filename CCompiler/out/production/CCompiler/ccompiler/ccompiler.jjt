@@ -113,6 +113,7 @@ TOKEN : // Keywords and punctuation
     |   < VOID : "void" >
     |   < CHAR : "char" >
     |   < WHILE : "while" >
+    |   < FOR : "for" >
 }
 TOKEN :
 {
@@ -179,14 +180,10 @@ Node compilation_unit() throws CompileException :
     Node node;
 }
 {
-    {
-        FourTermStyle.start();
-    }
     node=stmts()
     < EOF >
     {
         root=new Node("root").addChildren(node);
-        FourTermStyle.finish();
         return root;
     }
 }
@@ -221,6 +218,7 @@ Node stmt() throws CompileException :
     |   node=while_stmt()
     |   node=dowhile_stmt()
     |   node=return_stmt()
+    |   node=for_stmt()
     )
     {
         if(node!=null){
@@ -447,9 +445,7 @@ Node terminal() throws CompileException :
         }
     )
     {
-        String temp=FourTermStyle.newTemp();
-        FourTermStyle.addCurrent(FourTermStyle.ASSIGN,Node.TerminalValue+x.image,temp);
-        return node.setAttribute(Node.Value,temp);
+        return node.setAttribute(Node.Value,Node.TerminalValue+x.image);
     }
 }
 Node assigns_stmt() throws CompileException : // 赋值语句
@@ -947,5 +943,41 @@ Node dowhile_stmt() throws CompileException :
                 )
                 .backpatchResult(dowhile_node.getAttribute(Node.StyleId));
         return new Node("dowhile").addChildren(dowhile_node,cond);
+    }
+}
+Node for_stmt() throws CompileException :
+{
+    Node for_0=new Node("null");
+    Node for_1=new Node("null");
+    Node for_2=new Node("null");
+    Node for_node;
+    FourTermStyle jmp=null;
+}
+{
+    < FOR > < LBR > (for_0=def_vars()|for_0=assigns_stmt()|< SEMIC >)
+    [
+        for_1=expr()
+        {
+            for_1.typeMatch("bool");
+            jmp=FourTermStyle.addCurrentJmp(for_1.getAttribute(Node.Value));
+        }
+    ]
+    {
+        if(jmp==null){
+            jmp=FourTermStyle.addCurrentJmp();
+        }
+    }
+    < SEMIC >
+    [
+        for_2=expr()
+        {
+           jmp.backpatchResult(for_2.getAttribute(Node.StyleId));
+        }
+    ]
+    < RBR >
+    (LOOKAHEAD(< LCBR >) for_node=block()|for_node=stmt())
+    {
+        jmp.backpatchResult(for_node.getAttribute(Node.StyleId));
+        return new Node("for").addChildren(for_0,for_1,for_2,for_node);
     }
 }
