@@ -9,12 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
-/**
- * TODO
- * 1. 为函数类型建立符号表
- * 2. 表达式的类型匹配
- * 3. 函数调用的类型匹配
- */
 public class SymbolTable {
     public static final Stack<SymbolTable> SymbolStack = new Stack<>();
 
