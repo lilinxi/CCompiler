@@ -21,8 +21,8 @@
           <entry key="project.open.time.16" value="1" />
           <entry key="project.open.time.3" value="2" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="13" />
+          <entry key="project.open.time.9" value="2" />
+          <entry key="project.opened" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -36,8 +36,8 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="C++" value="867" />
-          <entry key="JAVA" value="4006" />
-          <entry key="JavaCC grammar" value="1866" />
+          <entry key="JAVA" value="4149" />
+          <entry key="JavaCC grammar" value="1942" />
           <entry key="PLAIN_TEXT" value="3664" />
         </counts>
       </usages-collector>
@@ -48,8 +48,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ccompiler/ccompiler.jjt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2992">
-              <caret line="279" column="16" selection-start-line="279" selection-start-column="16" selection-end-line="279" selection-end-column="16" />
+            <state relative-caret-position="211">
+              <caret line="179" column="1" lean-forward="true" selection-start-line="179" selection-start-column="1" selection-end-line="179" selection-end-column="1" />
               <folding>
                 <element signature="e#102#1480#0" expanded="true" />
                 <element signature="e#1686#1793#0" expanded="true" />
@@ -71,7 +71,8 @@
                 <element signature="e#3962#4027#0" expanded="true" />
                 <element signature="e#4028#4093#0" expanded="true" />
                 <element signature="n#!!block;n#compilation_unit#0;n#!!top" expanded="true" />
-                <element signature="e#4429#4506#0" expanded="true" />
+                <element signature="e#4400#4412#0" expanded="true" />
+                <element signature="e#4446#4555#0" expanded="true" />
                 <element signature="n#!!block;n#stmts#0;n#!!top" expanded="true" />
                 <element signature="e#4626#4713#0" expanded="true" />
                 <element signature="e#4725#4764#0" expanded="true" />
@@ -126,7 +127,6 @@
                 <element signature="e#12075#12499#0" expanded="true" />
                 <element signature="e#12530#13075#0" expanded="true" />
                 <element signature="e#13087#13200#0" expanded="true" />
-                <element signature="n#expr2#0;n#!!top" />
                 <element signature="n#!!block;n#expr2#0;n#!!top" expanded="true" />
                 <element signature="e#13553#13892#0" expanded="true" />
                 <element signature="e#13923#14488#0" expanded="true" />
@@ -175,17 +175,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils/abstractcode/FourTermStyle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="21" selection-start-column="21" selection-end-column="21" />
+            <state relative-caret-position="199">
+              <caret line="86" column="57" selection-start-line="86" selection-start-column="57" selection-end-line="86" selection-end-column="57" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ccompiler/debug.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1020">
-              <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
+            <state relative-caret-position="221">
+              <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -194,10 +194,7 @@
         <entry file="file://$PROJECT_DIR$/src/ccompiler/CCompiler.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="48">
-              <caret line="16" column="70" selection-start-line="16" selection-start-column="70" selection-end-line="16" selection-end-column="70" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <caret line="14" column="70" selection-start-line="14" selection-start-column="70" selection-end-line="14" selection-end-column="70" />
             </state>
           </provider>
         </entry>
@@ -205,7 +202,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/utils/tree/Node.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="680">
+            <state relative-caret-position="130">
               <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -223,11 +220,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/ccompiler/test2.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="4" column="6" selection-end-line="21" selection-end-column="1" />
+            <state relative-caret-position="-444">
+              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -236,7 +233,7 @@
         <entry file="file://$PROJECT_DIR$/src/run">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="68">
-              <caret line="2" selection-end-line="2" />
+              <caret line="2" lean-forward="true" selection-end-line="2" />
             </state>
           </provider>
         </entry>
@@ -289,11 +286,11 @@
       <find>if_stmt</find>
       <find>addInstance</find>
       <find>addBuffer</find>
-      <find>terminal</find>
       <find>lnode.typeMatch(rnode);</find>
       <find>f</find>
       <find>in_style</find>
       <find>def_fun</find>
+      <find>terminal</find>
     </findStrings>
     <replaceStrings>
       <replace>Nod</replace>
@@ -315,15 +312,15 @@
         <option value="$PROJECT_DIR$/src/utils/exception/TypeMismatchException.java" />
         <option value="$PROJECT_DIR$/src/utils/Node.java" />
         <option value="$PROJECT_DIR$/src/ccompiler/test.c" />
-        <option value="$PROJECT_DIR$/src/utils/abstractcode/FourTermStyle.java" />
         <option value="$PROJECT_DIR$/src/utils/table/SymbolTable.java" />
         <option value="$PROJECT_DIR$/src/utils/tree/Node.java" />
         <option value="$PROJECT_DIR$/src/ccompiler/test2.c" />
         <option value="$PROJECT_DIR$/src/ccompiler/test1.c" />
         <option value="$PROJECT_DIR$/src/ccompiler/debug.c" />
-        <option value="$PROJECT_DIR$/src/run" />
-        <option value="$PROJECT_DIR$/src/ccompiler/ccompiler.jjt" />
         <option value="$PROJECT_DIR$/src/ccompiler/CCompiler.java" />
+        <option value="$PROJECT_DIR$/src/run" />
+        <option value="$PROJECT_DIR$/src/utils/abstractcode/FourTermStyle.java" />
+        <option value="$PROJECT_DIR$/src/ccompiler/ccompiler.jjt" />
       </list>
     </option>
   </component>
@@ -342,8 +339,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -366,6 +361,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -457,11 +454,12 @@
       <workItem from="1546395126804" duration="1276000" />
       <workItem from="1546397586365" duration="853000" />
       <workItem from="1546400000830" duration="33000" />
+      <workItem from="1546413157422" duration="1274000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="43269000" />
+    <option name="totallyTimeSpent" value="44543000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -474,6 +472,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14713065" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -485,7 +484,7 @@
       <window_info id="Learn" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32959184" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.43061224" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.6316326" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -617,10 +616,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/table/SymbolTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/tree/Node.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ccompiler/CCompiler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="14" column="70" selection-start-line="14" selection-start-column="70" selection-end-line="14" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/abstractcode/FourTermStyle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="199">
+          <caret line="86" column="57" selection-start-line="86" selection-start-column="57" selection-end-line="86" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/ccompiler/ccompiler.jjt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2992">
-          <caret line="279" column="16" selection-start-line="279" selection-start-column="16" selection-end-line="279" selection-end-column="16" />
+        <state relative-caret-position="211">
+          <caret line="179" column="1" lean-forward="true" selection-start-line="179" selection-start-column="1" selection-end-line="179" selection-end-column="1" />
           <folding>
             <element signature="e#102#1480#0" expanded="true" />
             <element signature="e#1686#1793#0" expanded="true" />
@@ -642,7 +675,8 @@
             <element signature="e#3962#4027#0" expanded="true" />
             <element signature="e#4028#4093#0" expanded="true" />
             <element signature="n#!!block;n#compilation_unit#0;n#!!top" expanded="true" />
-            <element signature="e#4429#4506#0" expanded="true" />
+            <element signature="e#4400#4412#0" expanded="true" />
+            <element signature="e#4446#4555#0" expanded="true" />
             <element signature="n#!!block;n#stmts#0;n#!!top" expanded="true" />
             <element signature="e#4626#4713#0" expanded="true" />
             <element signature="e#4725#4764#0" expanded="true" />
@@ -697,7 +731,6 @@
             <element signature="e#12075#12499#0" expanded="true" />
             <element signature="e#12530#13075#0" expanded="true" />
             <element signature="e#13087#13200#0" expanded="true" />
-            <element signature="n#expr2#0;n#!!top" />
             <element signature="n#!!block;n#expr2#0;n#!!top" expanded="true" />
             <element signature="e#13553#13892#0" expanded="true" />
             <element signature="e#13923#14488#0" expanded="true" />
@@ -742,20 +775,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/ccompiler/debug.c">
+    <entry file="file://$PROJECT_DIR$/src/run">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils/tree/Node.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="68">
+          <caret line="2" lean-forward="true" selection-end-line="2" />
         </state>
       </provider>
     </entry>
@@ -766,44 +789,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/run">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils/table/SymbolTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils/abstractcode/FourTermStyle.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="21" selection-start-column="21" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/ccompiler/CCompiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="48">
-          <caret line="16" column="70" selection-start-line="16" selection-start-column="70" selection-end-line="16" selection-end-column="70" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ccompiler/test2.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="4" column="6" selection-end-line="21" selection-end-column="1" />
+        <state relative-caret-position="-444">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/ccompiler/debug.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="9" column="3" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
         </state>
       </provider>
     </entry>

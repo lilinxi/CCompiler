@@ -179,10 +179,14 @@ Node compilation_unit() throws CompileException :
     Node node;
 }
 {
+    {
+        FourTermStyle.start();
+    }
     node=stmts()
     < EOF >
     {
         root=new Node("root").addChildren(node);
+        FourTermStyle.finish();
         return root;
     }
 }
@@ -443,7 +447,9 @@ Node terminal() throws CompileException :
         }
     )
     {
-        return node.setAttribute(Node.Value,Node.TerminalValue+x.image);
+        String temp=FourTermStyle.newTemp();
+        FourTermStyle.addCurrent(FourTermStyle.ASSIGN,Node.TerminalValue+x.image,temp);
+        return node.setAttribute(Node.Value,temp);
     }
 }
 Node assigns_stmt() throws CompileException : // 赋值语句

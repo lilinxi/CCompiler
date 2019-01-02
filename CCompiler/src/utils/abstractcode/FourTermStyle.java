@@ -3,16 +3,13 @@ package utils.abstractcode;
 import java.util.ArrayList;
 
 public class FourTermStyle {
-    public static final String BLANK = "_";
-    public static final String ASSIGN = ":=";
-    public static final String PLUS = "+";
-    public static final String MINUS = "-";
-    public static final String MULT = "*";
-    public static final String DIV = "/";
-    public static final String MOD = "%";
+    public static final String BLANK = "0";
+    public static final String ASSIGN = "=";
     public static final String JMP = "j";
-    public static final String JMP_ = "j<";
-    private static final String TEMP = ".t";
+    private static final String TEMP = "t";
+    private static final String RETURN= "RETURN";
+    private static final String FUNC= "fun";
+    private static final String MAIN= "main";
     private static int TEMP_COUNT = 1;
     private static final ArrayList<FourTermStyle> BUFFER = new ArrayList<>();
     private static final ArrayList<FourTermStyle> CURRENT = new ArrayList<>();
@@ -86,8 +83,18 @@ public class FourTermStyle {
         }
     }
 
+    public static final void start() {
+        FourTermStyle.addCurrent(FUNC, BLANK, BLANK, MAIN);
+    }
+
+    public static final void finish() {
+        String temp = newTemp();
+        FourTermStyle.addCurrent(ASSIGN, "#0", BLANK, temp);
+        FourTermStyle.addCurrent(RETURN, BLANK, BLANK, temp);
+    }
+
     @Override
     public String toString() {
-        return String.format("(%2d: %5s,%5s,%5s,%5s)", id,op, arg1, arg2, result);
+        return String.format("%2d: (%s,%5s,%5s,%5s)", id,op, arg1, arg2, result);
     }
 }
